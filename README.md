@@ -29,6 +29,8 @@ Windows 默认切换输入法需要 `Win+Space` 或 `Ctrl+Space`，而 CapsLock 
 | **C** (Win32) | `c/` | 极小 exe，零依赖，纯 Win32 API |
 | **AutoHotkey** | `ahk/` | 需安装 AutoHotkey v2，便于阅读和修改 |
 
+编译后的 exe 统一输出到 `bin/` 目录。
+
 三者功能完全一致，选择哪个取决于你的偏好：
 
 - **C#** — 平衡体积和可维护性，最推荐
@@ -64,8 +66,10 @@ setup.bat    （需先安装 AutoHotkey v2）
 
 ```cmd
 :: C#
-%windir%\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:winexe /r:System.Windows.Forms.dll /r:System.Drawing.dll /out:CapsLockZhEn.exe CapsLockZhEn.cs
+cd csharp
+%windir%\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:winexe /r:System.Windows.Forms.dll /r:System.Drawing.dll /out:..\bin\CapsLockZhEn.exe CapsLockZhEn.cs
 
 :: C
-%windir%\System32\cl.exe /nologo /O1 /Fe:capslock.exe capslock.c /link /SUBSYSTEM:WINDOWS user32.lib kernel32.lib shell32.lib
+cd c
+%windir%\System32\cl.exe /nologo /O1 /Fe:..\bin\capslock.exe capslock.c /link /SUBSYSTEM:WINDOWS user32.lib kernel32.lib shell32.lib
 ```

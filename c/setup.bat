@@ -5,7 +5,7 @@ echo === CapsLock ZhEn (C) ===
 echo.
 
 set "SCRIPT_DIR=%~dp0"
-set "EXE_PATH=!SCRIPT_DIR!capslock.exe"
+set "EXE_PATH=!SCRIPT_DIR!..\bin\capslock.exe"
 set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
 
 if not exist "!EXE_PATH!" (
