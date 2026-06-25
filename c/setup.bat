@@ -5,11 +5,11 @@ echo === CapsLock ZhEn (C) ===
 echo.
 
 set "SCRIPT_DIR=%~dp0"
-set "EXE_PATH=!SCRIPT_DIR!..\bin\capslock.exe"
+set "EXE_PATH=!SCRIPT_DIR!..\bin\c\CapsLockZhEn.exe"
 set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
 
 if not exist "!EXE_PATH!" (
-    echo [ERROR] capslock.exe not found.
+    echo [ERROR] CapsLockZhEn.exe not found.
     pause
     exit /b 1
 )
@@ -23,7 +23,7 @@ if not !ERRORLEVEL! EQU 0 (
 )
 echo [OK] Startup shortcut: !LINK_PATH!
 
-echo Starting capslock.exe ...
+echo Starting CapsLockZhEn.exe ...
 start "CapsLockZhEn" "!EXE_PATH!"
 echo Done
 pause

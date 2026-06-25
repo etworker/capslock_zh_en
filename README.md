@@ -67,9 +67,9 @@ setup.bat    （需先安装 AutoHotkey v2）
 ```cmd
 :: C#
 cd csharp
-%windir%\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:winexe /r:System.Windows.Forms.dll /r:System.Drawing.dll /out:..\bin\CapsLockZhEn.exe CapsLockZhEn.cs
+%windir%\Microsoft.NET\Framework\v4.0.30319\csc.exe /target:winexe /r:System.Windows.Forms.dll /r:System.Drawing.dll /out:..\bin\csharp\CapsLockZhEn.exe CapsLockZhEn.cs
 
 :: C
 cd c
-%windir%\System32\cl.exe /nologo /O1 /Fe:..\bin\capslock.exe capslock.c /link /SUBSYSTEM:WINDOWS user32.lib kernel32.lib shell32.lib
+%windir%\System32\cl.exe /nologo /O1 /Fe:..\bin\c\CapsLockZhEn.exe capslock.c /link /SUBSYSTEM:WINDOWS user32.lib kernel32.lib shell32.lib
 ```
