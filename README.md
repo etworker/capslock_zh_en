@@ -8,6 +8,7 @@ Mac 风格：短按 CapsLock 切换中英文输入法（Windows 11）。
 |------|------|------|
 | **C#** | `csharp/` | 7KB 单 exe，零依赖，推荐 |
 | **AutoHotkey** | `ahk/` | 需安装 AutoHotkey v2 |
+| **C** | `c/` | 极小 exe，零依赖，纯 Win32 API |
 
 两者功能完全一致，均通过模拟 `Ctrl+Space` 切换输入法。
 
