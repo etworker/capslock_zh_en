@@ -3,12 +3,22 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Threading;
 
 static class Program
 {
+    static Mutex mutex;
+
     [STAThread]
     static void Main()
     {
+        mutex = new Mutex(true, "CapsLockZhEn", out bool createdNew);
+        if (!createdNew)
+        {
+            mutex.Close();
+            return;
+        }
+
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         using (var ctx = new CapsLockCtx())

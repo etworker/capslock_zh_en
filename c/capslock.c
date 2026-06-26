@@ -107,6 +107,13 @@ static void DetectLayouts()
 
 int WINAPI WinMain(HINSTANCE hI, HINSTANCE, LPSTR, int)
 {
+    HANDLE hm = CreateMutexW(0, FALSE, L"Local\\CapsLockZhEn");
+    if (!hm || GetLastError() == ERROR_ALREADY_EXISTS)
+    {
+        if (hm) CloseHandle(hm);
+        return 0;
+    }
+
     DetectLayouts();
 
     WNDCLASS wc = { .lpfnWndProc=Wnd, .hInstance=hI, .lpszClassName=L"CapsLockZhEn" };
