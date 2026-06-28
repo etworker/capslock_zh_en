@@ -1,7 +1,17 @@
 @echo off
-title CapsLock IME Switcher - Uninstall
-echo === CapsLock IME Switcher - Uninstall ===
+SETLOCAL ENABLEDELAYEDEXPANSION
+title CapsLock ZhEn (C) - Uninstall
+echo === CapsLock ZhEn (C) - Uninstall ===
 echo.
+
+echo Stopping CapsLockZhEn.exe ...
+taskkill /f /im CapsLockZhEn.exe >nul 2>&1
+if !ERRORLEVEL! EQU 0 (
+    echo [OK] Process terminated.
+) else (
+    echo [INFO] No running process found.
+)
+
 set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
 if exist "%LINK_PATH%" (
     del "%LINK_PATH%"
@@ -9,7 +19,9 @@ if exist "%LINK_PATH%" (
 ) else (
     echo [INFO] No startup entry found.
 )
+
 echo.
-echo To stop: right-click tray icon -^> 退出
+echo Uninstall complete.
 echo.
 pause
+ENDLOCAL

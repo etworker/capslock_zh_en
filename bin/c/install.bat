@@ -1,7 +1,7 @@
 @echo off
 SETLOCAL ENABLEDELAYEDEXPANSION
-title CapsLock ZhEn (C#) - Setup
-echo === CapsLock ZhEn (C#) ===
+title CapsLock ZhEn (C) - Install
+echo === CapsLock ZhEn (C) ===
 echo.
 
 set "SCRIPT_DIR=%~dp0"

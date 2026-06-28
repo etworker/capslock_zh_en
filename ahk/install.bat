@@ -1,6 +1,6 @@
 @echo off
 SETLOCAL ENABLEDELAYEDEXPANSION
-title CapsLock ZhEn (AHK) - Setup
+title CapsLock ZhEn (AHK) - Install
 echo === CapsLock ZhEn (AHK) ===
 echo.
 
@@ -14,11 +14,11 @@ if not exist "!AHK_EXE!" (
 echo [OK] AutoHotkey v2 found
 
 set "SCRIPT_DIR=%~dp0"
-set "LAUNCH_PATH=!SCRIPT_DIR!launch.bat"
+set "AHK_SCRIPT=!SCRIPT_DIR!CapsLockZhEn.ahk"
 set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
 
 echo Creating startup shortcut ...
-powershell -NoProfile -Command "$WS=New-Object -ComObject WScript.Shell; $SC=$WS.CreateShortcut('!LINK_PATH!'); $SC.TargetPath='!LAUNCH_PATH!'; $SC.WorkingDirectory='!SCRIPT_DIR!'; $SC.Save()"
+powershell -NoProfile -Command "$WS=New-Object -ComObject WScript.Shell; $SC=$WS.CreateShortcut('!LINK_PATH!'); $SC.TargetPath='!AHK_EXE!'; $SC.Arguments='\"!AHK_SCRIPT!\"'; $SC.WorkingDirectory='!SCRIPT_DIR!'; $SC.Save()"
 if not !ERRORLEVEL! EQU 0 (
     echo [ERROR] Failed to create shortcut
     pause
@@ -27,7 +27,7 @@ if not !ERRORLEVEL! EQU 0 (
 echo [OK] Startup shortcut: !LINK_PATH!
 
 echo Starting CapsLockZhEn.ahk ...
-start "CapsLockZhEn" "!LAUNCH_PATH!"
+start "CapsLockZhEn" "!AHK_EXE!" "!AHK_SCRIPT!"
 echo Done
 pause
 ENDLOCAL
