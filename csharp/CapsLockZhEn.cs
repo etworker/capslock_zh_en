@@ -74,6 +74,7 @@ class CapsLockCtx : ApplicationContext
     LowLevelKeyboardProc hookProc;
     NotifyIcon tray;
     DateTime capsDown;
+    bool capsPressed;
     IntPtr chineseHKL;
 
     public CapsLockCtx()
@@ -132,11 +133,12 @@ class CapsLockCtx : ApplicationContext
 
             if (wParam == (IntPtr)WM_KEYDOWN)
             {
-                capsDown = DateTime.Now;
+                if (!capsPressed) { capsPressed = true; capsDown = DateTime.Now; }
                 return (IntPtr)1;
             }
             if (wParam == (IntPtr)WM_KEYUP)
             {
+                capsPressed = false;
                 if ((DateTime.Now - capsDown).TotalMilliseconds < 300)
                 {
                     ToggleIME();

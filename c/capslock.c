@@ -16,6 +16,7 @@ static HHOOK g_hook;
 static HKL   g_zhHKL;
 static int   g_haveZH;
 static DWORD g_tDown;
+static BOOL  g_capsDown;
 
 static LRESULT CALLBACK Hook(int code, WPARAM wp, LPARAM lp)
 {
@@ -27,9 +28,14 @@ static LRESULT CALLBACK Hook(int code, WPARAM wp, LPARAM lp)
         if (kb->flags & LLKHF_INJECTED)
             return CallNextHookEx(g_hook, code, wp, lp);
 
-        if (wp == WM_KEYDOWN)   { g_tDown = GetTickCount(); return 1; }
+        if (wp == WM_KEYDOWN)
+        {
+            if (!g_capsDown) { g_capsDown = 1; g_tDown = GetTickCount(); }
+            return 1;
+        }
         if (wp == WM_KEYUP)
         {
+            g_capsDown = 0;
             if (GetTickCount() - g_tDown < 300)
             {
                 HWND fg = GetForegroundWindow();
