@@ -126,6 +126,10 @@ class CapsLockCtx : ApplicationContext
 
         if (vk == VK_CAPITAL)
         {
+            int flags = Marshal.ReadInt32(lParam, 8);
+            if ((flags & 0x10) != 0) // LLKHF_INJECTED
+                return CallNextHookEx(hookId, nCode, wParam, lParam);
+
             if (wParam == (IntPtr)WM_KEYDOWN)
             {
                 capsDown = DateTime.Now;
@@ -134,7 +138,14 @@ class CapsLockCtx : ApplicationContext
             if (wParam == (IntPtr)WM_KEYUP)
             {
                 if ((DateTime.Now - capsDown).TotalMilliseconds < 300)
+                {
                     ToggleIME();
+                }
+                else
+                {
+                    keybd_event(VK_CAPITAL, 0, 0, UIntPtr.Zero);
+                    keybd_event(VK_CAPITAL, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+                }
                 return (IntPtr)1;
             }
         }

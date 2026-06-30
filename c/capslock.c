@@ -4,11 +4,13 @@
 #define _WIN32_IE 0x0600
 #include <windows.h>
 #include <shellapi.h>
+#include <stdlib.h>
 
 #define ID_TRAY      100
 #define ID_EXIT      101
 #define WM_TRAY      (WM_USER+1)
 #define LANG_ZHCN    0x0804
+
 
 static HHOOK g_hook;
 static HKL   g_zhHKL;
@@ -22,6 +24,9 @@ static LRESULT CALLBACK Hook(int code, WPARAM wp, LPARAM lp)
 
     if (kb->vkCode == VK_CAPITAL)
     {
+        if (kb->flags & LLKHF_INJECTED)
+            return CallNextHookEx(g_hook, code, wp, lp);
+
         if (wp == WM_KEYDOWN)   { g_tDown = GetTickCount(); return 1; }
         if (wp == WM_KEYUP)
         {
@@ -42,6 +47,11 @@ static LRESULT CALLBACK Hook(int code, WPARAM wp, LPARAM lp)
                     else if (g_haveZH)
                         PostMessage(fg, 0x0050, 0, (LPARAM)g_zhHKL);
                 }
+            }
+            else
+            {
+                keybd_event(VK_CAPITAL, 0, 0, 0);
+                keybd_event(VK_CAPITAL, 0, KEYEVENTF_KEYUP, 0);
             }
             return 1;
         }
@@ -99,7 +109,8 @@ static void DetectLayouts()
     HKL *buf = (HKL*)malloc(n * sizeof(HKL));
     if (!buf) return;
     GetKeyboardLayoutList(n, buf);
-    for (int i=0; i<n; i++)
+    int i;
+    for (i=0; i<n; i++)
         if (((ULONG_PTR)buf[i] & 0xFFFF) == LANG_ZHCN)
             { g_zhHKL = buf[i]; g_haveZH = 1; break; }
     free(buf);
@@ -116,7 +127,11 @@ int WINAPI WinMain(HINSTANCE hI, HINSTANCE, LPSTR, int)
 
     DetectLayouts();
 
-    WNDCLASS wc = { .lpfnWndProc=Wnd, .hInstance=hI, .lpszClassName=L"CapsLockZhEn" };
+    WNDCLASS wc;
+    ZeroMemory(&wc, sizeof(wc));
+    wc.lpfnWndProc = Wnd;
+    wc.hInstance = hI;
+    wc.lpszClassName = L"CapsLockZhEn";
     RegisterClass(&wc);
     HWND hW = CreateWindowEx(0, wc.lpszClassName, 0, 0, 0,0,0,0, 0,0,hI,0);
     if (!hW) return 1;
