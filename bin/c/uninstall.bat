@@ -12,9 +12,10 @@ if !ERRORLEVEL! EQU 0 (
     echo [INFO] No running process found.
 )
 
-set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
-if exist "%LINK_PATH%" (
-    del "%LINK_PATH%"
+set "REG_NAME=CapsLockIME"
+echo Removing startup registry entry ...
+reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "%REG_NAME%" /f >nul 2>&1
+if !ERRORLEVEL! EQU 0 (
     echo [OK] Startup entry removed.
 ) else (
     echo [INFO] No startup entry found.

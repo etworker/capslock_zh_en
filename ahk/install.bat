@@ -15,16 +15,17 @@ echo [OK] AutoHotkey v2 found
 
 set "SCRIPT_DIR=%~dp0"
 set "AHK_SCRIPT=!SCRIPT_DIR!CapsLockZhEn.ahk"
-set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
+set "REG_NAME=CapsLockIME"
 
-echo Creating startup shortcut ...
-powershell -NoProfile -Command "$WS=New-Object -ComObject WScript.Shell; $SC=$WS.CreateShortcut('!LINK_PATH!'); $SC.TargetPath='!AHK_EXE!'; $SC.Arguments='\"!AHK_SCRIPT!\"'; $SC.WorkingDirectory='!SCRIPT_DIR!'; $SC.Save()"
-if not !ERRORLEVEL! EQU 0 (
-    echo [ERROR] Failed to create shortcut
+echo Adding startup registry entry ...
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "%REG_NAME%" /t REG_SZ /d "\"!AHK_EXE!\" \"!AHK_SCRIPT!\"" /f >nul 2>&1
+if !ERRORLEVEL! EQU 0 (
+    echo [OK] Startup entry added: HKCU\...\Run\%REG_NAME%
+) else (
+    echo [ERROR] Failed to add registry entry
     pause
     exit /b 1
 )
-echo [OK] Startup shortcut: !LINK_PATH!
 
 echo Starting CapsLockZhEn.ahk ...
 start "CapsLockZhEn" "!AHK_EXE!" "!AHK_SCRIPT!"

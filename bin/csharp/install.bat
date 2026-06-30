@@ -6,7 +6,7 @@ echo.
 
 set "SCRIPT_DIR=%~dp0"
 set "EXE_PATH=!SCRIPT_DIR!CapsLockZhEn.exe"
-set "LINK_PATH=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\CapsLockIME.lnk"
+set "REG_NAME=CapsLockIME"
 
 if not exist "!EXE_PATH!" (
     echo [ERROR] CapsLockZhEn.exe not found.
@@ -14,14 +14,15 @@ if not exist "!EXE_PATH!" (
     exit /b 1
 )
 
-echo Creating startup shortcut ...
-powershell -NoProfile -Command "$WS=New-Object -ComObject WScript.Shell; $SC=$WS.CreateShortcut('!LINK_PATH!'); $SC.TargetPath='!EXE_PATH!'; $SC.WorkingDirectory='!SCRIPT_DIR!'; $SC.Save()"
-if not !ERRORLEVEL! EQU 0 (
-    echo [ERROR] Failed to create shortcut
+echo Adding startup registry entry ...
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "%REG_NAME%" /t REG_SZ /d "!EXE_PATH!" /f >nul 2>&1
+if !ERRORLEVEL! EQU 0 (
+    echo [OK] Startup entry added: HKCU\...\Run\%REG_NAME%
+) else (
+    echo [ERROR] Failed to add registry entry
     pause
     exit /b 1
 )
-echo [OK] Startup shortcut: !LINK_PATH!
 
 echo Starting CapsLockZhEn.exe ...
 start "CapsLockZhEn" "!EXE_PATH!"
