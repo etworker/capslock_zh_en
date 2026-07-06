@@ -145,6 +145,7 @@ class CapsLockCtx : ApplicationContext
                 }
                 else
                 {
+                    ToggleIME();
                     keybd_event(VK_CAPITAL, 0, 0, UIntPtr.Zero);
                     keybd_event(VK_CAPITAL, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
                 }

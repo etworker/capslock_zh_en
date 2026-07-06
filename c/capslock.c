@@ -18,6 +18,23 @@ static int   g_haveZH;
 static DWORD g_tDown;
 static BOOL  g_capsDown;
 
+static void ToggleIME(void)
+{
+    HWND fg = GetForegroundWindow();
+    if (!fg) return;
+    DWORD pid, tid = GetWindowThreadProcessId(fg, &pid);
+    HKL cur = GetKeyboardLayout(tid);
+    if (((ULONG_PTR)cur & 0xFFFF) == LANG_ZHCN)
+    {
+        keybd_event(VK_CONTROL,0,0,0);
+        keybd_event(VK_SPACE,  0,0,0);
+        keybd_event(VK_SPACE,  0,KEYEVENTF_KEYUP,0);
+        keybd_event(VK_CONTROL,0,KEYEVENTF_KEYUP,0);
+    }
+    else if (g_haveZH)
+        PostMessage(fg, 0x0050, 0, (LPARAM)g_zhHKL);
+}
+
 static LRESULT CALLBACK Hook(int code, WPARAM wp, LPARAM lp)
 {
     if (code < 0) return CallNextHookEx(g_hook, code, wp, lp);
@@ -37,25 +54,10 @@ static LRESULT CALLBACK Hook(int code, WPARAM wp, LPARAM lp)
         {
             g_capsDown = 0;
             if (GetTickCount() - g_tDown < 300)
-            {
-                HWND fg = GetForegroundWindow();
-                if (fg)
-                {
-                    DWORD pid, tid = GetWindowThreadProcessId(fg, &pid);
-                    HKL cur = GetKeyboardLayout(tid);
-                    if (((ULONG_PTR)cur & 0xFFFF) == LANG_ZHCN)
-                    {
-                        keybd_event(VK_CONTROL,0,0,0);
-                        keybd_event(VK_SPACE,  0,0,0);
-                        keybd_event(VK_SPACE,  0,KEYEVENTF_KEYUP,0);
-                        keybd_event(VK_CONTROL,0,KEYEVENTF_KEYUP,0);
-                    }
-                    else if (g_haveZH)
-                        PostMessage(fg, 0x0050, 0, (LPARAM)g_zhHKL);
-                }
-            }
+                ToggleIME();
             else
             {
+                ToggleIME();
                 keybd_event(VK_CAPITAL, 0, 0, 0);
                 keybd_event(VK_CAPITAL, 0, KEYEVENTF_KEYUP, 0);
             }
