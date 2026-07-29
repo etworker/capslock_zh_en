@@ -4,6 +4,9 @@
 
 - 依赖 [AutoHotkey v2](https://www.autohotkey.com/) 运行
 - 短按发 `Ctrl+Space` 切换中英文
+- `#SingleInstance Force` 天然单实例保护
+- **休眠唤醒恢复**：监听 `WM_POWERBROADCAST`，唤醒后同步 CapsLock 状态
+- **CapsLock 防锁死**：定时检测并修复 CapsLock 被错误置为 ON 的状态
 
 ## 安装
 

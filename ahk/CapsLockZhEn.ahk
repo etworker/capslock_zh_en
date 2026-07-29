@@ -10,9 +10,17 @@
 A_TrayMenu.Delete()
 A_TrayMenu.Add("Reload", (*) => Reload())
 A_TrayMenu.Add("Exit", (*) => ExitApp())
-TraySetIcon "imageres.dll", 132
+TraySetIcon A_ScriptDir "\capslock.ico"
 
-; ─── Detect installed layouts at startup ───
+; ─── Auto-execute section ───
+DetectLayouts()
+SyncCapsLock()                          ; 启动时强制 CapsLock OFF
+SetTimer "SyncCapsLock", 2000           ; 每 2 秒定时同步
+OnMessage 0x0218, "OnPowerBroadcast"    ; WM_POWERBROADCAST = 0x0218
+
+; ─── Functions ───
+
+; Detect installed layouts at startup
 DetectLayouts() {
     global EnglishHKL := 0, ChineseHKL := 0
     max := 50
@@ -28,7 +36,26 @@ DetectLayouts() {
     }
 }
 
-DetectLayouts()
+; Force CapsLock toggle OFF.
+; CapsLock:: blocks the native key so toggle state should never change,
+; but sleep/wake may set it ON externally — this syncs it back.
+; Uses Suspend to temporarily remove the hook so keybd_event passes through.
+SyncCapsLock() {
+    if GetKeyState("CapsLock", "T") {
+        Suspend "On"
+        DllCall("keybd_event", "UChar", 0x14, "UChar", 0, "UInt", 0, "UPtr", 0)        ; keydown
+        DllCall("keybd_event", "UChar", 0x14, "UChar", 0, "UInt", 0x0002, "UPtr", 0)   ; keyup
+        Sleep 50
+        Suspend "Off"
+    }
+}
+
+; Power resume handler — sync CapsLock on wake from sleep/hibernate
+OnPowerBroadcast(wParam, lParam, msg, hwnd) {
+    ; PBT_APMRESUMECRITICAL(6), PBT_APMRESUMESUSPEND(7), PBT_APMRESUMEAUTOMATIC(18)
+    if (wParam = 6 || wParam = 7 || wParam = 18)
+        SyncCapsLock()
+}
 
 ; ─── CapsLock handler ───
 CapsLock:: {
