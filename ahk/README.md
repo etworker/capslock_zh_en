@@ -7,6 +7,7 @@
 - `#SingleInstance Force` 天然单实例保护
 - **休眠唤醒恢复**：监听 `WM_POWERBROADCAST`，唤醒后同步 CapsLock 状态
 - **CapsLock 防锁死**：定时检测并修复 CapsLock 被错误置为 ON 的状态
+- **TSF/Electron 适配**：对只有 TSF、无传统 IMM 上下文的窗口（如 Chromium/Electron），退化为"总是发 `Ctrl+Space` 翻转"并禁用长按点亮 CapsLock
 
 ## 安装
 

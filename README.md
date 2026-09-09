@@ -15,6 +15,10 @@ Windows 默认切换输入法需要 `Win+Space` 或 `Ctrl+Space`，而 CapsLock 
   - 当前为中文输入法 → 发送 `Ctrl+Space` 切换到英文模式
   - 当前为英文输入法 → 直接切换到已安装的中文键盘布局
 - **长按**（>= 300ms）→ 正常触发大写锁定开关，不做拦截
+- **可靠 IME 判断**：用 `ImmGetConversionStatus` 读取前台线程 IME 的真实中/英模式，避免"只切大小写"
+- **TSF/Electron 适配**：对只有 TSF、无传统 IMM 上下文的窗口（如 Chromium/Electron 应用），退化为"总是发 `Ctrl+Space` 翻转"且绝不让 CapsLock 点亮
+
+> 关于 Electron/Chromium（如 AutoClaw）输入框内"CapsLock 失效"的根因与技术调研，见 [`docs/CapsLock-IME-in-Electron.md`](docs/CapsLock-IME-in-Electron.md)。
 
 ## 系统要求
 
